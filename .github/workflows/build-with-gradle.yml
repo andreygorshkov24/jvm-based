@@ -1,0 +1,27 @@
+name: Build with Gradle.
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v2
+        with:
+          cache: 'gradle'
+          distribution: 'corretto'
+          java-version: 17
+
+      - name: Build with Gradle.
+        run: ./gradlew build --no-daemon --scan
+
+      - name: Upload spotbugs report artifact.
+        uses: actions/upload-artifact@v2
+        with:
+          name: spotbugs report
+          path: build/reports/spotbugs.html
